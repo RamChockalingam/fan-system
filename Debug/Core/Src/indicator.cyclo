@@ -1,0 +1,5 @@
+../Core/Src/indicator.c:31:6:Blink_LED	9
+../Core/Src/indicator.c:40:6:Left_Indicator_ON	2
+../Core/Src/indicator.c:51:6:Right_Indicator_ON	2
+../Core/Src/indicator.c:62:6:Both_Indicators_Toggle	2
+../Core/Src/indicator.c:76:6:Indicator_Update	23
