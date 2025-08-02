@@ -5,6 +5,9 @@
 * I2C slave motor controller is unavailable so dummy transmission is done
 * Also only one ADC was available in my board so have set an arbitrary current sense value but still have written the logic for fan speed feedback control based on supplied power vs expected power assumption
 
+## Graph of fan speed vs Vac
+<img width="1307" height="963" alt="image" src="https://github.com/user-attachments/assets/1dcdd738-8ccf-4967-ba7e-d1b42950610e" />
+
 ## Logs captured for different cases
 ```
 When Vac is 23V (<30 Vac) so speed is zero
