@@ -479,6 +479,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 	adc_volt = adc_to_voltage(AD_RES);
 	//based on given configuration that 265 Vac from lines is the max AC voltage corresponding to 3V DC max which is the reference ADC voltage from board
 	input_vac = (adc_volt * 265.0f ) / 3.0f;
+	//Assuming that fan speed is between 0 and 100(max)
 	speed = vac_to_speed(input_vac);
 	//Due to unavailability of another ADC in my board and a little problem with using another channel in same ADC I am using a constant arbitrary value for cs
 	cs_voltage = 0.1;
