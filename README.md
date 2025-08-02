@@ -44,3 +44,7 @@ When Vac is 133 (between 30 Vac and 200 Vac) so speed is linearly increasing
 [22:30:08.811] Low voltage ! Speed is boosted
 ```
 
+## Logic analyzer waveforms for dummy I2C transmission of speed value
+<img width="1875" height="321" alt="image" src="https://github.com/user-attachments/assets/9bbc81ec-3ecf-4a3e-8920-bfb72e7286fe" />
+
+
