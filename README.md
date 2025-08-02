@@ -1,5 +1,6 @@
 # Fan control system
 ## Description
+* fan_control/Core/Src/main.c is where the main application file is present and no other external driver files are there.
 * This is a fan control system where the regulator knob changes are mapped to the Vac sense signal(0Vac to 265 Vac) and these AC voltages are converted to analog values and are read by STM32F411E's adc channel pin and converted to voltage with 3V as reference from board.
 * Speed ranges from 0 to 100
 * I2C slave motor controller is unavailable so dummy transmission is done
