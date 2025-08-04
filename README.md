@@ -2,6 +2,7 @@
 ## Description
 * fan_system/Core/Src/main.c is where the main application file is present and no other external driver files are there.
 * Have implemented most logic inside ADC interrupt callback function HAL_ADC_ConvCpltCallback()
+* For the Vac sense signal analog inputs I have used a simple resistor voltage divider circuit because I don'didn't have a potentiometer. 
 * This is a fan control system where the regulator knob changes are mapped to the Vac sense signal(0 Vac to 265 Vac) and these AC voltages are converted to analog values and are read by STM32F411E's adc channel pin and converted to voltage with 3V as reference from board which is then converted to speed.
 * Assumming fan Speed ranges from 0 to 100 and max fan power output as 25W. 
 * I2C slave motor controller is unavailable so dummy transmission is done
