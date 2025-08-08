@@ -1,0 +1,3 @@
+../Core/Src/fan_speed_controller.c:12:14:convertAdcToVoltage	16	static
+../Core/Src/fan_speed_controller.c:18:16:convertVacToSpeed	24	static
+../Core/Src/fan_speed_controller.c:36:6:FanSpeedController_ProcessConversion	32	static

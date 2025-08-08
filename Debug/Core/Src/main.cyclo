@@ -1,0 +1,10 @@
+../Core/Src/main.c:74:1:__io_putchar	1
+../Core/Src/main.c:80:6:send_speed_in_i2c	2
+../Core/Src/main.c:99:5:main	2
+../Core/Src/main.c:159:6:SystemClock_Config	3
+../Core/Src/main.c:201:13:MX_ADC1_Init	3
+../Core/Src/main.c:253:13:MX_I2C1_Init	2
+../Core/Src/main.c:287:13:MX_USART2_UART_Init	2
+../Core/Src/main.c:320:13:MX_GPIO_Init	1
+../Core/Src/main.c:452:6:HAL_ADC_ConvCpltCallback	1
+../Core/Src/main.c:471:6:Error_Handler	1

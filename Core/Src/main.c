@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include <stdbool.h>
+#include "fan_speed_controller.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -37,9 +38,6 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#define ADC_RESOLUTION  4095.0
-#define VREF            3.0  //3V supply used from board
-#define SLOPE 			((100.0 - 0)/(200.0 - 30.0)) //Calculated from 30Vac to 200Vac linearity info taking (30,0) and (200,100) points
 #define DRV10983_ADDR	(0x52 << 1)
 #define SPEED_REG 		 0x12 //Just dummy register address
 /* USER CODE END PM */
@@ -79,15 +77,6 @@ PUTCHAR_PROTOTYPE
   return ch;
 }
 
-float adc_to_voltage(uint16_t adc_val) {
-	//based on reference adc voltage being 3V from board and ADC with 12 bit resolution so 4096 is the max value
-    return (adc_val * VREF) / ADC_RESOLUTION;
-}
-
-float dc_to_ac(uint16_t adc_vol) {
-    return (adc_vol * 265.0f ) / 3.0f;
-}
-
 void send_speed_in_i2c(uint8_t speed)
 {
 	//I'm just sending dummy data through I2C to a dummy slave and dummy register address because of unavailability of the motor driver module
@@ -95,17 +84,6 @@ void send_speed_in_i2c(uint8_t speed)
     if (status != HAL_OK) {
         printf("[I2C]Failed to send speed %d to DRV10983 (no ACK)\n", speed);
     }
-}
-
-
-uint8_t vac_to_speed(float vac){
-    if (vac <= 30.0f)
-        return 0;
-    else if (vac >= 200.0f)
-        return 100;
-    else//This is the linear relationship between speed and Vac for Vac between 30 and 200
-    	//Below formula is just a rearranged one from (y2-y1) =m*(x2-x1) where m is the slope and points (30,0) and (Vac,speed) are taken
-        return (uint8_t)((vac - 30.0f)* SLOPE);
 }
 /* USER CODE END PFP */
 
@@ -473,50 +451,16 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
-    //read & update the ADC value for Vac sense signal
-	AD_RES = HAL_ADC_GetValue(&hadc1);
-	adc_flag = 1;
-	adc_volt = adc_to_voltage(AD_RES);
-	//based on given configuration that 265 Vac from lines is the max AC voltage corresponding to 3V DC max which is the reference ADC voltage from board
-	input_vac = (adc_volt * 265.0f ) / 3.0f;
-	//Assuming that fan speed is between 0 and 100(max)
-	speed = vac_to_speed(input_vac);
-	//Due to unavailability of another ADC in my board and a little problem with using another channel in same ADC I am using a constant arbitrary value for cs
-	cs_voltage = 0.1;
-	//based on cs corresponding to 69mV for every Watt of power from mains we find power from present current sense value
-	power = (cs_voltage * 1000.0f) / 69.0f;
-
-
-	//Feedback adjustment calculation for ensuring we get desired power output from fan based on the set speed
-	expected_power = (speed / 100.0f) * 25.0f; // Assume 25W is the max power at full speed(100)
-	if(input_vac > 30.0f && input_vac < 200.0f)
-	{
-		//Assuming boosting is done when mains delivered power is less than 75% of expected power for the set speed
-		if (power < expected_power * 0.75f) {
-			speed += 10;  // Less power is drawn so increasing speed
-			printf("Low voltage ! Speed is boosted\n");
-			printf("\n");
-		}
-		//assuming decreasing is done when mains delivered power is more than 125% of expected power for the set speed
-		else if (power > expected_power * 1.25f) {
-			speed -= 10;  // More power is drawn so decreasing speed
-			printf("High voltage ! Speed is decreased\n");
-			printf("\n");
-		}
-		//incase speed exceeds maximum value of 100 during boosting or decreasing
-		if (speed > 100)
-			speed = 100;
-	}
-	else if(input_vac > 200.0f)
-	{
-		printf("Vac above 200V, so no more linear increase after 100\n");
-		printf("\n");
-	}
-	else
-	{
-		printf("Vac below 30V, so regulator is turned off: zero speed\n");
-		printf("\n");
-	}
+    FanSpeedController_ProcessConversion(
+        hadc,
+        &AD_RES,
+        &adc_flag,
+        &adc_volt,
+        &input_vac,
+        &speed,
+        &cs_voltage,
+        &power,
+        &expected_power);
 }
 /* USER CODE END 4 */
 
