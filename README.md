@@ -1,7 +1,7 @@
 # Fan control system
 ## Description
 * fan_system/Core/Src/fan_speed_controller.c and fan_speed_controller.h is where the fan system application file is present with all the core logic for feedback speed control, raw adc to voltage conversion, voltage to speed calculations, assumption comments, etc are all present
-* Inside HAL_ADC_ConvCpltCallback() FanSpeedController_ProcessConversion() is called and addresses of essential variables from main are passed as arguments which are acted upon in the driver file.
+* In main.c inside HAL_ADC_ConvCpltCallback() I have called FanSpeedController_ProcessConversion() where addresses of essential variables from main are passed as arguments which are acted upon in the driver file.
 * For the Vac sense signal analog inputs I have used a simple resistor voltage divider circuit because I don'didn't have a potentiometer. 
 * This is a fan control system where the regulator knob changes are mapped to the Vac sense signal(0 Vac to 265 Vac) and these AC voltages are converted to analog values and are read by STM32F411E's adc channel pin and converted to voltage with 3V as reference from board which is then converted to speed.
 * Assumming fan Speed ranges from 0 to 100 and max fan power output as 25W. 
